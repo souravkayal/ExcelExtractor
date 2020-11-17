@@ -9,8 +9,18 @@
 </div>
 <div class="row">
 
+
+
+    <div class="panel-body">
+        <div class="form-group"> <input type="file" id="uploadfile" /> </div> <input id="btnSubmit" class="btn btn-default" type="button" value="Upload" />
+        <div class="text-info" id="status"></div>
+    </div>
+
+    <div id="aa"></div>
+
     <script type="text/javascript" language="javascript">
         $(document).ready(function () {
+
             $('#btnSubmit').click(function () {
                 if ($('#uploadfile').val() == '') {
                     alert('Please select file');
@@ -26,12 +36,9 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        
-                        $('#CustomerName').text(result.CustomerName);
-                        $('#CustomerId').text(result.CustomerId);
-                        $('#CustomerSalary').text(result.CustomerSalary);
-                        $('#CustomerDes').text(result.CustomerDesignation);
-
+                        for (var i = 0; i < result.length; i++) {
+                            $('#aa').append('<div>' + result[i].ColumnName + ' : <span> ' + result[i].DataType + ' </span> </div>');
+                        }
                     },
                     error: function (error) {
                         alert("Faild please try upload again" + JSON.stringify(error));
@@ -40,17 +47,5 @@
             });
         });
     </script>
-
-    <div class="panel-body">
-        <div class="form-group"> <input type="file" id="uploadfile" /> </div> <input id="btnSubmit" class="btn btn-default" type="button" value="Upload" />
-        <div class="text-info" id="status"></div>
-    </div>
-
-    <div  class="panel-body">
-        <div>Customer Name : <span id="CustomerName"></span> </div>
-        <div>Customer Id : <span id="CustomerId"></span> </div>
-        <div>Customer Salary : <span id="CustomerSalary"></span> </div>
-        <div>Customer Designation : <span id="CustomerDes"></span> </div>
-    </div>
 
 </div>

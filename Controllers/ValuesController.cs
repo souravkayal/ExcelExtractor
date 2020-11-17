@@ -12,12 +12,10 @@ using System.Web.Http;
 
 namespace ExcelReader.Controllers
 {
-    public class CustomerDataType
+    public class ExcelColumnType
     {
-        public string CustomerName { get; set; }
-        public string CustomerId { get; set; }
-        public string CustomerSalary { get; set; }
-        public string CustomerDesignation { get; set; }
+        public string ColumnName { get; set; }
+        public string DataType { get; set; }
     }
 
     public class ExcelController : ApiController
@@ -25,10 +23,6 @@ namespace ExcelReader.Controllers
         // POST api/values
         public IHttpActionResult Post(HttpRequestMessage request)
         {
-            object aa = 123;
-
-            bool rea = (aa.GetType() == typeof(int));
-
 
             HttpContext context = HttpContext.Current;
             HttpPostedFile postedFile = context.Request.Files["file"];
@@ -48,17 +42,19 @@ namespace ExcelReader.Controllers
             reader.Close();
 
             var finalRecords = excelRecords.Tables[0];
-            //for (int i = 1; i < finalRecords.Rows.Count; i++)
-            //{
-            var result = new CustomerDataType
+            var columnList = new List<ExcelColumnType>();
+            
+            for (int i = 0; i < finalRecords.Columns.Count; i++)
             {
-                    CustomerName = DataTypeHelper.TypeChecker(finalRecords.Rows[1][0]),
-                    CustomerId = DataTypeHelper.TypeChecker(finalRecords.Rows[1][1]),
-                    CustomerSalary = DataTypeHelper.TypeChecker(finalRecords.Rows[1][2]),
-                    CustomerDesignation = DataTypeHelper.TypeChecker(finalRecords.Rows[1][3])
-            };
-            //}
-            return Ok(result);
+                var item = new ExcelColumnType 
+                {
+                    ColumnName = Convert.ToString(finalRecords.Rows[0][i]) ,
+                    DataType = DataTypeHelper.TypeChecker(finalRecords.Rows[1][i])
+                };
+                columnList.Add(item);
+            }
+
+            return Ok(columnList);
         }
     }
 }
